@@ -13,27 +13,50 @@
 <body>
     <canvas id="canvas"></canvas>
     <script>
-
-        var canvas = document.getElementById('canvas');
-        canvas.width = document.documentElement.clientWidth
-        canvas.height = document.documentElement.clientHeight
-        var ctx = canvas.getContext('2d');
+        let isTouchDevice = 'ontouchstart' in document.documentElement;//判断屏幕是否可以触摸
+        var canvas = document.getElementById('canvas');//声明canvas
+        canvas.width = document.documentElement.clientWidth//canvas宽度=文档宽度
+        canvas.height = document.documentElement.clientHeight//canvas高度=文档高度
+        //声明变量
+        var ctx = canvas.getContext('2d')
         let painting = false
-        canvas.onmousedown = () => {
-            painting = true
+        let last
+        //划线函数
+        function drawlines(x1, y1, x2, y2) {
+            ctx.lineWidth = 4
+            ctx.beginPath()
+            ctx.moveTo(x1, y1)
+            ctx.lineTo(x2, y2)
+            ctx.stroke()
+            ctx.lineCap = 'round'
+            //ctx.lineJoin = 'round'
         }
-
-        canvas.onmousemove = (e) => {
-            if (painting === true) {
-                ctx.beginPath();
-                ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
-                ctx.stroke();
-                ctx.fill()
-            } else {
-                console.log('无')
+        //触摸设备
+        if (isTouchDevice) {
+            canvas.ontouchstart = (e) => {
+                last = [e.touches[0].clientX, e.touches[0].clientY]//记录起点
             }
-            canvas.onmouseup = () => {
-                painting = false
+            canvas.ontouchmove = (e) => {
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
+                drawlines(last[0], last[1], x, y)
+                last = [x, y]
+            }
+        }
+        //非触摸设备
+        else {
+            canvas.onmousedown = (e) => {
+                painting = true
+                last = [e.clientX, e.clientY]//记录起点
+            }
+            canvas.onmousemove = (e) => {
+                if (painting === true) {
+                    drawlines(last[0], last[1], e.clientX, e.clientY)
+                    last = [e.clientX, e.clientY]
+                }
+                canvas.onmouseup = () => {
+                    painting = false//划线终点
+                }
             }
         }
     </script>
