@@ -35,6 +35,7 @@
         //触摸设备
         if (isTouchDevice) {
             canvas.ontouchstart = (e) => {
+                ctx.strokeStyle = 'orange'//橙色线条
                 last = [e.touches[0].clientX, e.touches[0].clientY]//记录起点
             }
             canvas.ontouchmove = (e) => {
