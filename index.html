@@ -21,15 +21,15 @@
         var ctx = canvas.getContext('2d')
         let painting = false
         let last
+        ctx.strokeStyle = 'orange'//橙色线条
+        ctx.lineWidth = 4
+        ctx.lineCap = 'round'
         //划线函数
         function drawlines(x1, y1, x2, y2) {
-            ctx.strokeStyle = 'orange'//橙色线条
-            ctx.lineWidth = 4
             ctx.beginPath()
             ctx.moveTo(x1, y1)
             ctx.lineTo(x2, y2)
             ctx.stroke()
-            ctx.lineCap = 'round'
             //ctx.lineJoin = 'round'
         }
         //触摸设备
